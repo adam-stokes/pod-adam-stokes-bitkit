@@ -1,0 +1,14 @@
+{:deps {com.cognitect/transit-clj {:mvn/version "1.0.324"}
+        nrepl/bencode {:mvn/version "1.1.0"}
+        babashka/pods {:git/url "https://github.com/babashka/pods"
+                       :sha "de4c3610c9ef3879370d01b7202a9f3a9d056f6e"}}
+ :aliases {:uberjar
+           {:replace-deps ; tool usage is new in 2.x
+            {seancorfield/depstar {:mvn/version "2.0.165"}}
+            :ns-default hf.depstar
+            :exec-fn uberjar
+            :exec-args {:jar pod-adam-stokes-bitkit.jar
+                        :compile-ns [pod.adam-stokes.bitkit]
+                        :aliases [:native]}}
+           :native {:jvm-opts ["-Dclojure.compiler.direct-linking=true"]
+                    :extra-deps {org.clojure/clojure {:mvn/version "1.10.3"}}}}}

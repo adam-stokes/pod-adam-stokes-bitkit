@@ -8,8 +8,8 @@
             {seancorfield/depstar {:mvn/version "2.0.165"}}
             :ns-default hf.depstar
             :exec-fn uberjar
-            :exec-args {:jar pod-adam-stokes-bitkit.jar
-                        :compile-ns [pod.adam-stokes.bitkit]
+            :exec-args {:jar pod-stokachu-bitkit.jar
+                        :compile-ns [pod.stokachu.bitkit]
                         :aliases [:native]}}
            :native {:jvm-opts ["-Dclojure.compiler.direct-linking=true"]
                     :extra-deps {org.clojure/clojure {:mvn/version "1.10.3"}}}}}

@@ -3,10 +3,10 @@
 (require '[babashka.pods :as pods])
 
 (if (= "executable" (System/getProperty "org.graalvm.nativeimage.kind"))
-  (pods/load-pod "./pod-adam-stokes-bitkit")
-  (pods/load-pod ["clojure" "-M" "-m" "pod.adam-stokes.bitkit"]))
+  (pods/load-pod "./pod-stokachu-bitkit")
+  (pods/load-pod ["clojure" "-M" "-m" "pod.stokachu.bitkit"]))
 
-(require '[pod.adam-stokes.bitkit.pkg :as pkg])
+(require '[pod.stokachu.bitkit.package :as pkg])
 
 (prn (pkg/install '(vim babashka)))
 (prn (pkg/uninstall))

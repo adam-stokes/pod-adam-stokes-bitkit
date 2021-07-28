@@ -1,4 +1,4 @@
-(ns pod.adam-stokes.pkg
+(ns bitkit.package
   (:require [babashka.process :refer [$ sh check]]
             [clojure.string :as string]))
 

@@ -1,7 +1,7 @@
-(ns pod.adam-stokes.bitkit
+(ns pod.stokachu.bitkit
   (:refer-clojure :exclude [read read-string])
   (:require [bencode.core :as bencode]
-            [pod.adam-stokes.pkg :as pkg]
+            [bitkit.package :as pkg]
             [clojure.java.io :as io]
             [clojure.walk :as walk]
             [cognitect.transit :as transit])
@@ -33,7 +33,7 @@
   (bencode/read-bencode stream))
 
 (def lookup*
-  {'pod.adam-stokes.bitkit.pkg
+  {'pod.stokachu.bitkit.package
    {'install pkg/install
     'uninstall pkg/uninstall
     'refresh pkg/refresh}})
@@ -49,10 +49,10 @@
      (if (ident? v) (name v)
          v))
    `{:format :transit+json
-     :namespaces [{:name pod.adam-stokes.bitkit.pkg
+     :namespaces [{:name pod.stokachu.bitkit.package
                    :vars ~(mapv (fn [[k _]]
                                   {:name k})
-                                (get lookup* 'pod.adam-stokes.bitkit.pkg))}]}))
+                                (get lookup* 'pod.stokachu.bitkit.package))}]}))
 
 (defn read-transit [^String v]
   (transit/read

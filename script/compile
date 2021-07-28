@@ -12,8 +12,8 @@ clojure -X:native:uberjar
 "$GRAALVM_HOME/bin/gu" install native-image
 
 "$GRAALVM_HOME/bin/native-image" \
-    -cp "pod-babashka-buddy.jar" \
-    -H:Name=pod-babashka-buddy \
+    -cp "pod-stokachu-bitkit.jar" \
+    -H:Name=pod-stokachu-bitkit \
     -H:+ReportExceptionStackTraces \
     --initialize-at-build-time  \
     -H:EnableURLProtocols=jar \
@@ -22,4 +22,4 @@ clojure -X:native:uberjar
     --no-fallback \
     --no-server \
     "-J-Xmx3g" \
-    pod.adam-stokes.bitkit
+    pod.stokachu.bitkit

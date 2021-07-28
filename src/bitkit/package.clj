@@ -1,5 +1,5 @@
 (ns bitkit.package
-  (:require [babashka.process :refer [$ sh check]]
+  (:require [babashka.process :refer [$ check]]
             [clojure.string :as string]))
 
 (defn install [pkgs]

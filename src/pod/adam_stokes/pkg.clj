@@ -1,10 +1,22 @@
 (ns pod.adam-stokes.pkg
-  {:no-doc true})
+  (:require [babashka.process :refer [$ sh check]]
+            [clojure.string :as string]))
 
-(def wtf (atom {}))
-
-(defn install []
-  (swap! wtf assoc "pkg" "install"))
+(defn install [pkgs]
+  "install packages"
+  (-> ($ echo install ~(string/join " " pkgs))
+      check
+      :out
+      slurp))
 
 (defn uninstall []
-  (swap! wtf assoc "pkg" "UnInstall"))
+  (-> ($ echo uninstall)
+      check
+      :out
+      slurp))
+
+(defn refresh []
+  (-> ($ echo brew update)
+      check
+      :out
+      slurp))

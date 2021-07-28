@@ -8,8 +8,9 @@
 
 (require '[pod.adam-stokes.bitkit.pkg :as pkg])
 
-(prn (pkg/install))
+(prn (pkg/install '(vim babashka)))
 (prn (pkg/uninstall))
+(prn (pkg/refresh))
 
 (when-not (= "executable" (System/getProperty "org.graalvm.nativeimage.kind"))
   (shutdown-agents)

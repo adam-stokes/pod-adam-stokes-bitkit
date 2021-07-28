@@ -35,7 +35,8 @@
 (def lookup*
   {'pod.adam-stokes.bitkit.pkg
    {'install pkg/install
-    'uninstall pkg/uninstall}})
+    'uninstall pkg/uninstall
+    'refresh pkg/refresh}})
 
 (defn lookup [var]
   (let [var-ns (symbol (namespace var))

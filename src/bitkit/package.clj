@@ -1,14 +1,15 @@
 (ns bitkit.package
-  (:require [babashka.process :refer [$ check]]
+  (:refer-clojure :exclude [update])
+  (:require [babashka.process :as p]
             [clojure.string :as string]))
 
-(defrecord RuntimeConfig [binary upgrade upgrade-system refresh install uninstall])
+(defrecord RuntimeConfig [binary upgrade upgrade-system update install uninstall])
 (def brew (RuntimeConfig.
            "brew"
            "upgrade"
            "upgrade"
            "update"
-           "install -f -q"
+           "install"
            "uninstall"))
 (def apt (RuntimeConfig.
           "apt"
@@ -32,38 +33,35 @@
 (defn- build-cmd
   [executor action & [opts]]
   "builds a command to use in public methods"
-  [(:binary executor) (action executor) (string/join " " opts)])
+  (let [opts (filter not-empty opts)]
+    (vec
+     (concat
+      [(:binary executor)
+       (action executor)
+       (distinct opts)]))))
+
+(defn- execute!
+  [cmds]
+  (let [cmds (filterv (complement #{nil?}) cmds)
+        result @(p/process cmds {:out :inherit :err :inherit})]
+    (when-not (zero? (:exit result))
+      (throw (ex-info "command execution failed"
+                      {:cmd cmds
+                       :exit (:exit result)})))))
 
 (defn install
   [pkgs]
   "install packages"
-  (let [cmd (build-cmd (pkg-runtime) :install pkgs)]
-    (-> ($ ~cmd)
-        check
-        :out
-        slurp)))
+  (execute! (build-cmd (pkg-runtime) :install pkgs)))
 
 (defn uninstall [pkgs]
-  (-> ($ ~(build-cmd (pkg-runtime) :uninstall pkgs))
-      check
-      :out
-      slurp))
+  (execute! (build-cmd (pkg-runtime) :uninstall pkgs)))
 
-(defn refresh []
-  (-> ($ ~(build-cmd (:binary (pkg-runtime))pkg-runtime-prefix :action :refresh))
-      check
-      :out
-      slurp))
+(defn update [_]
+  (execute! (build-cmd (pkg-runtime) :update)))
 
 (defn upgrade [pkgs]
-  (-> ($ ~(pkg-runtime-prefix :action :upgrade) ~(string/join " " pkgs))
-      check
-      :out
-      slurp))
-
+  (execute! (build-cmd (pkg-runtime) :upgrade pkgs)))
 
 (defn upgrade-system []
-  (-> ($ ~(pkg-runtime-prefix :action :upgrade-system))
-      check
-      :out
-      slurp))
+  (execute! (build-cmd (pkg-runtime) :upgrade-system)))

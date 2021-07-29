@@ -3,11 +3,20 @@
             [clojure.string :as string]))
 
 (defrecord RuntimeConfig [binary upgrade upgrade-system refresh install uninstall])
-(def brew (RuntimeConfig. "brew" "upgrade" "upgrade" "update" "install -f -q" "uninstall"))
-(def apt (RuntimeConfig. "apt" "install" "dist-upgrade" "update" "install -qyf" "remove -qyf"))
-
-(defn pkg-runtime-config [var]
-  (get-in runtime-config var))
+(def brew (RuntimeConfig.
+           "brew"
+           "upgrade"
+           "upgrade"
+           "update"
+           "install -f -q"
+           "uninstall"))
+(def apt (RuntimeConfig.
+          "apt"
+          "install"
+          "dist-upgrade"
+          "update"
+          "install -qyf"
+          "remove -qyf"))
 
 (defn- os-name
   []
@@ -20,21 +29,28 @@
     "mac" brew
     ))
 
-(defn install [pkgs]
+(defn- build-cmd
+  [executor action & [opts]]
+  "builds a command to use in public methods"
+  [(:binary executor) (action executor) (string/join " " opts)])
+
+(defn install
+  [pkgs]
   "install packages"
-  (-> ($ ~(:binary (pkg-runtime)) ~(:install (pkg-runtime)) ~(string/join " " pkgs))
-      check
-      :out
-      slurp))
+  (let [cmd (build-cmd (pkg-runtime) :install pkgs)]
+    (-> ($ ~cmd)
+        check
+        :out
+        slurp)))
 
 (defn uninstall [pkgs]
-  (-> ($ ~(pkg-runtime-prefix :action :uninstall) ~(string/join " " pkgs))
+  (-> ($ ~(build-cmd (pkg-runtime) :uninstall pkgs))
       check
       :out
       slurp))
 
 (defn refresh []
-  (-> ($ ~(pkg-runtime-prefix :action :refresh))
+  (-> ($ ~(build-cmd (:binary (pkg-runtime))pkg-runtime-prefix :action :refresh))
       check
       :out
       slurp))

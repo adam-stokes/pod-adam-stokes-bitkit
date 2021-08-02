@@ -9,7 +9,7 @@
 (require '[pod.stokachu.bitkit.package :as pkg])
 
 (prn (pkg/install '(vim babashka)))
-(prn (pkg/refresh))
+(prn (pkg/update))
 
 (when-not (= "executable" (System/getProperty "org.graalvm.nativeimage.kind"))
   (shutdown-agents)

@@ -36,7 +36,9 @@
   {'pod.stokachu.bitkit.package
    {'install pkg/install
     'uninstall pkg/uninstall
-    'refresh pkg/refresh}})
+    'update pkg/update
+    'upgrade pkg/upgrade
+    'upgrade-system pkg/upgrade-system}})
 
 (defn lookup [var]
   (let [var-ns (symbol (namespace var))
